@@ -1,19 +1,18 @@
 /**
- * MakeCode editor extension for AiThinker A9G
- * by guowushi@qq.com
+ * MakeCode editor extension for AiThinker A9G  by guowushi@qq.com
+ * 
  */
 //% block="A9G" weight=100 color=#ff8f3f icon="\uf043"
 namespace A9G {
 
 
-    let ntext = "" 
-    let resultStr = "" 
+
     //定义经度和维度
     let Latitude = "" 
     let Longitude = "" 
-    let bool = 0 
-    let content = "" 
-
+    
+   
+    
     /**
      * 将整数转16进制
      * @param num 
@@ -51,6 +50,29 @@ namespace A9G {
         ) 
     }
     /**
+     * 是否有SIM卡,返回
+     * at+ccid   //查询ccid，确定是否有sim卡
+     * +CCID: 898602A8221478DE0092
+     */
+    export function HasSims(){ 
+        serial.writeLine("at+ccid") 
+    }
+    /**
+     * at+creg?  //查询是否注册上网络
+        +CREG: 1,5 
+     */
+    export function IsOnline() { 
+        serial.writeLine(" at+creg?") 
+    }
+    /**
+     * 附着网络
+     */
+    export function RegGrpsNetwork() { 
+        serial.writeLine("AT+CGATT=1")  //附着网络，如果需要上网，这条指令是必选的
+        serial.writeLine("AT+CGDCONT=1,\"IP\",\"CMNET\"")  // //设置PDP参数
+        serial.writeLine("AT+CGACT=1,1")        //激活PDP，正确激活以后就可以上网了
+    }
+    /**
      * 开启GPS
      */
     //% block="开启GPS"
@@ -58,6 +80,13 @@ namespace A9G {
         serial.writeLine("AT+GPS=1")  // 开启GPS 
         serial.writeLine("AT+GPSRD=1")  // 查询GPS时间间隔为1秒
         serial.writeLine("AT+GPSLP=1") // 设置GPS为低功耗模式
+    }
+    /**
+     * 查询地理位置,返回
+     */
+    export function GetLocation() { 
+        var ret = serial.writeLine("AT+LOCATION=1")   
+       return ret
     }
     /**
      * 读取GPS信息,直到返回经度和维度
@@ -86,13 +115,23 @@ namespace A9G {
        return [Latitude,Longitude];
     }
 
+    export function SendTextSms(phone: string, stext: string) { 
+
+    }
+
+    export function SendPduSms(phone: string, stext: string) { 
+
+    }
     /**
      * 发送短信
      * @param phone 接收者电话号码
      * @param stext 短信内容
      */
     //% block="发送短信"
-    export  function SendSMS(phone: string, stext: string) {
+    export function SendSMS(phone: string, stext: string) {
+        let ntext = "" 
+        let resultStr = "" 
+        let content = "" 
         let buffer = pins.createBuffer(1);
         buffer.setNumber(NumberFormat.Int8LE, 0, 0x1A)
         phone = "" + phone + "F"
@@ -111,5 +150,14 @@ namespace A9G {
         serial.writeLine("AT+CMGS=" + (parseInt((content.length / 2).toString()) - 1).toString())
         serial.writeString(content)
         serial.writeBuffer(buffer)
+    }
+    /**
+     * 连接MQTT服务器
+     * @param broker MQTT服务器地址
+     * @param topic  主题
+     */
+    //% block="连接MQTT服务器"
+    export function ConectMqtt(broker:string,topic:string) { 
+        serial.writeLine(' AT + MQTTCONN="'+broker+'", 1883, "'+topic+'", 120, 0')  
     }
 }
