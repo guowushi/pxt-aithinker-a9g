@@ -4,12 +4,7 @@
 //% block="A9G" weight=100 color=#ff8f3f icon="\uf043"
 namespace A9G {
 
-    enum LocationMode {
-        //% block="基站定位"
-        BaseRadioStaion=1,
-        //% block="GPS定位"
-        GPS=2
-    }
+    
     let actualApnName = "internet";
     let echoEnabled = false; //should be alsways on false during normal operation
     let mqttSubscribeTopics: string[] = []; //订阅的主题
@@ -193,7 +188,7 @@ namespace A9G {
      */
      //% group="6. GPS: "
     //% block="查询地理位置"
-    export function GetLocation(mode:LocationMode) {
+    export function GetLocation(mode:number) {
         let cmd = "AT+LOCATION=" + mode
         let atResponse = doSendAtCommand(cmd)
        // usbLogger.info(atResponse)
