@@ -1,6 +1,5 @@
 /**
  * MakeCode editor extension for AiThinker A9G  by guowushi@qq.com
- * 
  */
 //% block="A9G" weight=100 color=#ff8f3f icon="\uf043"
 namespace A9G {
@@ -185,7 +184,7 @@ namespace A9G {
      * @param tx 模块串口TX端对应的引脚 ,如 SerialPin.P2
      * @param rx 模块串口RX端对应的引脚 ，如SerialPin.P1
      */
-    //% block="初始化A9G模块"
+    //% block="初始化A9G模块,TX: $tx RX: $rx"
     export function InitA9G(tx: SerialPin, rx: SerialPin) {
         /*
         serial.redirect(
